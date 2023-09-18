@@ -1,27 +1,119 @@
 ---
 title: "Stats506_PS2"
 author: "Heleyna Tucker"
-format: html
+format:
+  html:
+    embed-resources: true
 editor: visual
 ---
 
-## Quarto
+# Problem 1 - Dice Game
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+Let's play a dice game. It costs \$2 to play. You roll a single 6-sided die.
 
-## Running Code
+-   On a roll of 2, 4, or 6, you win the amount on the roll (e.g. a roll of 4 wins \$4).
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+-   On a roll of 1, 3, or 5, you lose
+
+We're going to implement this in different ways. Each function takes in as input the number of dice to roll, and each function returns your total winnings or loses. E.g.
+
+play_dice(10) -\> \[1\] 4
+
+play_dice(10) -\> \[1\] -6
+
+## Part A:
+
+i\) Version 1: Implement this game using a loop over the dice rolls.
 
 ```{r}
-1 + 1
+#' Function to play dice game
+#'
+#' @param rolls is a numberic entry for the number of rolls the user specifies
+#'
+#' @return total value according to dice role rules (even number rolled, add to total, odd number rolled, take away from total.)
+#' @export
+#'
+#' @examples
+play_dice1 <- function(rolls) {
+  total <- 2
+  for (i in 1:rolls){
+    roll <- sample(1:6,1)
+    if (roll %% 2 == 0){
+      total <- total + roll
+    }
+    else{
+      total <- total - roll
+    }
+  }
+  return(total)
+}
 ```
 
-You can add options to executable code like this
+ii\) Version 2: Implement this game using built-in R vectorized functions.
+
+*How do I do this?* Not sure what it's asking me to do
 
 ```{r}
-#| echo: false
-2 * 2
+play_dice2 <- function(rolls){
+  total <- 2
+  total_rolls <- sample(1:6, rolls)
+  
+}
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+# Problem 2 - Linear Regression
+
+Download the cars data set. The goal is go examine the relationship between horsepower and highway gas mileage.
+
+Download cars data set using ready_csv():
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+cars <- read_csv('/Users/19892/OneDrive/Documents/STATS506/ProblemSets/ProblemSet2-HT2.0/cars.csv')
+```
+
+```{r}
+cars[1:10,]
+```
+
+Above we can see that the names of the variables are very long.
+
+### Part A: Rename the columns of the data to more reasonable lengths
+
+```{r}
+col_names <- c('Height', 'Length', 'Width', 'Driveline', 'EngineType', 'Hybrid', 'NumForwardGears', 'Transmission', 'CityMPG', 'FuelType', 'HighwayMPG', 'Classification', 'ID', 'Make', 'ModelYear', 'Year', 'HP', 'Torque')
+colnames(cars) = col_names
+cars[1:10,]
+```
+
+Above is the cars data frame renamed using the column names I specified in the col_names variable.
+
+### Part B: Restrict the data whose Fuel Type is "Gasoline"
+
+I will do this using the which() function below:
+
+```{r}
+cars_gasoline <- cars[which(cars$FuelType == "Gasoline"),]
+cars_gasoline[1:10,]
+```
+
+Now we have data frame cars_gasoline which restricts the data to cars whose Fuel Type is "Gasoline".
+
+### Part C: Fit a linear regression model predicting MPG on the highway. The predictor of interest is horsepower. Control for:
+
+-   The torque of the engine
+
+-   All three dimensions of the car
+
+-   The year the measurement was made, as a categorical variable. (Not the year the car was manufactured).
+
+Briefly discuss the estimated relationship between horsepower and highway MPG. Be precise about the interpretation of the estimated coefficient.
+
+Here is he linear model predicting MPG on the highway with horsepower:
+
+```{r}
+lmod <- lm(HighwayMPG ~ HP, data = cars_gasoline)
+```

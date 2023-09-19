@@ -49,7 +49,7 @@ play_dice1 <- function(rolls) {
 }
 ```
 
-ii\) Version 2: Implement this game using built-in R vectorized functions.
+\*ii) Version 2: Implement this game using built-in R vectorized functions.
 
 *How do I do this?* Not sure what it's asking me to do
 
@@ -115,5 +115,32 @@ Briefly discuss the estimated relationship between horsepower and highway MPG. B
 Here is he linear model predicting MPG on the highway with horsepower:
 
 ```{r}
-lmod <- lm(HighwayMPG ~ HP, data = cars_gasoline)
+lmod <- lm(HighwayMPG ~ HP + Torque + Height + Length + Width + as.factor(Year), data = cars_gasoline)
+summary(lmod)
+```
+
+Above we can see that the relationship between horsepower and highway MPG is that with a one unit increase in horsepower, highway MPG increases by about 0.016. This is significant given the p-value in the summary above is below 0.05.
+
+### Part D: 
+
+It seems reasonable that there may be an interaction between horsepower and torque. Refit the model (with lm) and generate an interaction plot, showing how the relationship between horsepower and MPG changes as torque changes. Choose reasonable values of horsepower, and show lines for three different reasonable values of torque.
+
+```{r}
+library(interactions)
+```
+
+```{r}
+mod2 <- lm(HighwayMPG ~  HP*Torque, data = cars_gasoline)
+interact_plot(mod2, pred = HP, modx = Torque)
+```
+
+In the above interaction plot, we can observe that when torque is higher, the relationship between HP and HighwayMPG is a stronger positive relationship than when torque is lower (dotted lighter blue line). When torque is lower (one SD below the mean), this is almost no relationship between HP and HighwayMPG,
+
+### \*Part E
+
+Calculate B-Hat manually (without using lm) by first creating a proper design matrix, then using matrix algebra to estimate B. Confirm that you get the same result as lm did prior.
+
+```{r}
+design_matrix <- model.matrix(form, data = cars_gasoline)
+design_matrix
 ```

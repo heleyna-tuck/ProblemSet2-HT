@@ -205,7 +205,7 @@ microbenchmark(play_dice1(10000), play_dice2(10000), play_dice3(10000), play_dic
 
 Above, it looks like with a higher input, the play_dice3() function runs the fastest on aerage, while the play_dice2() and play_dice4() run fairly slower on average.
 
-### Part E: Do you think this is a fair game? Defend your decision with evidence based upon a Monte Carlo simulation.
+### \*Part E: Do you think this is a fair game? Defend your decision with evidence based upon a Monte Carlo simulation.
 
 # Problem 2 - Linear Regression
 
@@ -277,7 +277,8 @@ library(interactions)
 
 ```{r}
 mod2 <- lm(HighwayMPG ~  HP*Torque + Height + Length + Width + as.factor(Year), data = cars_gasoline)
-interact_plot(mod2, pred = HP, at = (Year = 2010), modx = Torque)
+summary(mod2)
+interact_plot(mod2, pred = HP, at = list(Year = 2010), modx = Torque)
 ```
 
 In the above interaction plot, we can observe that when torque is higher, the relationship between HP and HighwayMPG is a stronger positive relationship than when torque is lower (dotted lighter blue line). When torque is lower (one SD below the mean), this is almost no relationship between HP and HighwayMPG,
@@ -294,7 +295,11 @@ library(matlib)
 
 ```{r}
 design_matrix <- model.matrix(lmod, data = cars_gasoline)
-estimation <- inv(t(design_matrix) %*% design_matrix) %*% t(design_matrix)
+Y <- matrix(cars_gasoline$HighwayMPG, nrow = 4591, ncol = 1)
+dim(t(design_matrix))
+dim(design_matrix)
+estimation <- solve(t(design_matrix) %*% design_matrix) %*% t(design_matrix) %*% Y
+print(estimation)
 ```
 
 # Problem 3 (Stata)

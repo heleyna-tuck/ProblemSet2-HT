@@ -56,7 +56,7 @@ play_dice1 <- function(rolls) {
 ```{r}
 #' Function to play dice game using vectorized functions
 #'
-#' @param rolls is a numberic entry for the number of rolls the user specifies
+#' @param rolls is a numeric entry for the number of rolls the user specifies
 #'
 #' @return total amount of money the player has when the game is played (even number rolled, add to amount of money. Odd number rolled, take away. It takes 2 dollars to play so subtract that from total as well.)
 #' @export
@@ -79,20 +79,51 @@ Above is the game implemented with built-in R vectorized function sum()
 iii\) Version 3: Implement this by collapsing the die rolls into a single table(). (Hint: Be careful indexing the table - what happens if you make a table of 5 dice rolls? You may need to look to other resources for how to solve this.)
 
 ```{r}
+#' Function to play dice game using tables
+#'
+#' @param rolls is a numeric entry for the number of rolls the user specifies
+#'
+#' @return total amount of money after playing (rules above)
+#' @export
+#'
+#' @examples
 play_dice3 <- function(rolls){
-  total_rolls <- sample(1:6, rolls, replace = TRUE)
+  total_rolls <- c(sample(1:6, rolls, replace = TRUE))
+  total_rolls <- factor(total_rolls, levels = c(1:6))
+  total_rolls <- table(total_rolls)
+  print(total_rolls)
+  total <- -2*(rolls)
+  for (i in 1:6){
+    print(total_rolls[i])
+      if((total_rolls[i]) != 0 & i %% 2 == 1){
+        total = total - (i*total_rolls[i])
+      }
+      if ((total_rolls[i]) != 0 & i %% 2 == 0){
+        total = total + (i*total_rolls[i])
+      }
+  }
+  return(as.numeric(total))
+        
+}
+```
+
+Above is the same dice game using tables. I use the same rules as indicated above to choose how I alter the total for the function to return.
+
+iv\) Version 4: Implement this game by using one the "apply" functions.
+
+```{r}
+play_dice4 <- function(rolls){
+  total_rolls <- matrix(sample(1:6, rolls, replace = TRUE), ncol = 6)
+  print(total_rolls)
   for(i in (1:rolls)){
       if(total_rolls[i] %in% c(1,3,5)){
         total_rolls[i] = -total_rolls[i]
   }
   }
-  total <- cumsum(total_rolls) - (2*rolls)
+  total <- apply(total_rolls,1, sum)
   return(total)
-        
 }
 ```
-
-iv\) Version 4: Implement this game by using one the "apply" functions.
 
 ### Part B: Demonstrate that all versions work. Do so by running each a few times, once with an input of 3, and once with an input of 3000.
 
@@ -170,7 +201,7 @@ library(interactions)
 
 ```{r}
 mod2 <- lm(HighwayMPG ~  HP*Torque + Height + Length + Width + as.factor(Year), data = cars_gasoline)
-interact_plot(mod2, pred = HP, at = list(Year = 2010, 2011, 2012), modx = Torque)
+interact_plot(mod2, pred = HP, at = (Year = 2010), modx = Torque)
 ```
 
 In the above interaction plot, we can observe that when torque is higher, the relationship between HP and HighwayMPG is a stronger positive relationship than when torque is lower (dotted lighter blue line). When torque is lower (one SD below the mean), this is almost no relationship between HP and HighwayMPG,

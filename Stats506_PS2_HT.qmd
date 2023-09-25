@@ -30,7 +30,7 @@ i\) Version 1: Implement this game using a loop over the dice rolls.
 #'
 #' @param rolls is a numberic entry for the number of rolls the user specifies
 #'
-#' @return total value according to dice role rules (even number rolled, add to total, odd number rolled, take away from total.)
+#' @return total value according to dice role rules (even number rolled, add to total, odd number rolled, do not win anything.)
 #' @export
 #'
 #' @examples
@@ -39,7 +39,7 @@ play_dice1 <- function(rolls, sample_rolls = sample(1:6, rolls, replace = TRUE))
   total_rolls <- sample_rolls
   for (i in 1:rolls){
     if (total_rolls[i] %% 2 == 1){
-      total = total-total_rolls[i]
+      total = total
     }
     else{
       total = total + total_rolls[i]
@@ -58,7 +58,7 @@ play_dice1 <- function(rolls, sample_rolls = sample(1:6, rolls, replace = TRUE))
 #'
 #' @param rolls is a numeric entry for the number of rolls the user specifies
 #'
-#' @return total amount of money the player has when the game is played (even number rolled, add to amount of money. Odd number rolled, take away. It takes 2 dollars to play so subtract that from total as well.)
+#' @return total amount of money the player has when the game is played (even number rolled, add to amount of money. Odd number rolled, don't win anything. It takes 2 dollars to play so subtract that from total as well.)
 #' @export
 #'
 #' @examples
@@ -66,7 +66,7 @@ play_dice2 <- function(rolls, sample_rolls = sample(1:6, rolls, replace = TRUE))
   total_rolls <- sample_rolls
   for(i in (1:rolls)){
       if(total_rolls[i] %in% c(1,3,5)){
-        total_rolls[i] = -total_rolls[i]
+        total_rolls[i] = 0
   }
   }
   total <- (sum(total_rolls) - (2*rolls))
@@ -94,7 +94,7 @@ play_dice3 <- function(rolls, sample_rolls = sample(1:6, rolls, replace = TRUE))
   total <- -2*(rolls)
   for (i in 1:6){
       if((total_rolls[i]) != 0 & i %% 2 == 1){
-        total = total - (i*total_rolls[i])
+        total = total 
       }
       if ((total_rolls[i]) != 0 & i %% 2 == 0){
         total = total + (i*total_rolls[i])
@@ -123,7 +123,7 @@ play_dice4 <- function(rolls, sample_rolls = sample(1:6, rolls, replace = TRUE))
   total_rolls <- sapply(dice_rolls, function(x){
     for (i in 1:rolls){
       if(x[i] %in% c(1,3,5)){
-        x[i] = -x[i]
+        x[i] = 0
       }
     }
     return(x)
@@ -203,9 +203,19 @@ Now I will try with a higher input:
 microbenchmark(play_dice1(10000), play_dice2(10000), play_dice3(10000), play_dice4(10000))
 ```
 
-Above, it looks like with a higher input, the play_dice3() function runs the fastest on aerage, while the play_dice2() and play_dice4() run fairly slower on average.
+Above, it looks like with a higher input, the play_dice3() function runs the fastest on average, while the play_dice2() and play_dice4() run fairly slower on average.
 
 ### \*Part E: Do you think this is a fair game? Defend your decision with evidence based upon a Monte Carlo simulation.
+
+```{r}
+outputs <- c()
+for (i in 1:1000){
+  outputs[i] <- play_dice1(100)
+}
+hist(rnorm(1000, mean = mean(outputs), sd = sd(outputs)))
+```
+
+As we can see from the histogram above, the simulation seems to be centered around zero. Meaning, we win about as much as we lose. Therefore, the game is fair.
 
 # Problem 2 - Linear Regression
 
@@ -283,7 +293,7 @@ interact_plot(mod2, pred = HP, at = list(Year = 2010), modx = Torque)
 
 In the above interaction plot, we can observe that when torque is higher, the relationship between HP and HighwayMPG is a stronger positive relationship than when torque is lower (dotted lighter blue line). When torque is lower (one SD below the mean), this is almost no relationship between HP and HighwayMPG,
 
-### \*Part E
+### Part E
 
 Calculate B-Hat manually (without using lm) by first creating a proper design matrix, then using matrix algebra to estimate B. Confirm that you get the same result as lm did prior.
 
@@ -294,10 +304,8 @@ library(matlib)
 ```
 
 ```{r}
-design_matrix <- model.matrix(lmod, data = cars_gasoline)
+design_matrix <- model.matrix(mod2, data = cars_gasoline)
 Y <- matrix(cars_gasoline$HighwayMPG, nrow = 4591, ncol = 1)
-dim(t(design_matrix))
-dim(design_matrix)
 estimation <- solve(t(design_matrix) %*% design_matrix) %*% t(design_matrix) %*% Y
 print(estimation)
 ```

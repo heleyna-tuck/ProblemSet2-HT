@@ -277,7 +277,7 @@ summary(lmod)
 
 Above we can see that the relationship between horsepower and highway MPG is that with a one unit increase in horsepower, highway MPG increases by about 0.016. This is significant given the p-value in the summary above is below 0.05.
 
-### Part D:
+### Part D: Interaction and Plot
 
 It seems reasonable that there may be an interaction between horsepower and torque. Refit the model (with lm) and generate an interaction plot, showing how the relationship between horsepower and MPG changes as torque changes. Choose reasonable values of horsepower, and show lines for three different reasonable values of torque.
 
@@ -293,7 +293,7 @@ interact_plot(mod2, pred = HP, at = list(Year = 2010), modx = Torque)
 
 In the above interaction plot, we can observe that when torque is higher, the relationship between HP and HighwayMPG is a stronger positive relationship than when torque is lower (dotted lighter blue line). When torque is lower (one SD below the mean), this is almost no relationship between HP and HighwayMPG,
 
-### Part E
+### Part E: Esimation
 
 Calculate B-Hat manually (without using lm) by first creating a proper design matrix, then using matrix algebra to estimate B. Confirm that you get the same result as lm did prior.
 
@@ -417,4 +417,9 @@ c.hp#c.torque |   .0001124   4.63e-06    24.28   0.000     .0001033    .0001214
               |
         _cons |   42.18795   .7930274    53.20   0.000     40.63323    43.74266
 -------------------------------------------------------------------------------
+```
+
+```         
+stata
+![Interaction Plot](/downloads/Graph.png)
 ```

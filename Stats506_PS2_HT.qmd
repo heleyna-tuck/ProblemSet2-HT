@@ -421,5 +421,52 @@ c.hp#c.torque |   .0001124   4.63e-06    24.28   0.000     .0001033    .0001214
 
 ```         
 stata
-![Interaction Plot](/downloads/Graph.png)
+
+
+. margins, at(torque = (25 50 75 100 125)) at(hp = (50 100 150 200 250))
+
+Predictive margins                                       Number of obs = 4,591
+Model VCE: OLS
+
+Expression: Linear prediction, predict()
+1._at:  torque =  25
+2._at:  torque =  50
+3._at:  torque =  75
+4._at:  torque = 100
+5._at:  torque = 125
+6._at:  hp     =  50
+7._at:  hp     = 100
+8._at:  hp     = 150
+9._at:  hp     = 200
+10._at: hp     = 250
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |     Margin   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         _at |
+          1  |   37.48228   .5064683    74.01   0.000     36.48936    38.47521
+          2  |   36.08209   .4550155    79.30   0.000     35.19004    36.97414
+          3  |    34.6819   .4037362    85.90   0.000     33.89038    35.47342
+          4  |   33.28171   .3527063    94.36   0.000     32.59023    33.97318
+          5  |   31.88152   .3020521   105.55   0.000     31.28935    32.47368
+          6  |   21.01066   .4708374    44.62   0.000     20.08759    21.93372
+          7  |   21.67869   .3653505    59.34   0.000     20.96242    22.39495
+          8  |   22.34672   .2613958    85.49   0.000     21.83425    22.85918
+          9  |   23.01474   .1619513   142.11   0.000     22.69724    23.33225
+         10  |   23.68277   .0847489   279.45   0.000     23.51662    23.84892
+------------------------------------------------------------------------------
+
+. marginsplot
+
+Variables that uniquely identify margins: torque hp
+Multiple at() options specified:
+      _atoption=1: torque = (25 50 75 100 125)
+      _atoption=2: hp = (50 100 150 200 250)
+
+. 
 ```
+
+![Interaction Plot](/Users/19892/downloads/Graph.png)
+
+As we can see from the graph, as torque goes up and hp goes up, the relationship is not as strong like in problem 2. ( I should have set torque and hp to the same range of values possibly)
